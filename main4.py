@@ -4,7 +4,7 @@ import pandas as pd
 from shapely.geometry import Point
 
 # Charger les hexagones (projection en mètres, ex : EPSG:3857)
-hexagones = gpd.read_file("hexagone/GenerateTessellation2.shp")
+hexagones = gpd.read_file("hexagone_python/hexagones_250m.shp")
 print(hexagones.crs)
 # Exemple : CSV contient les colonnes 'longitude', 'latitude', 'valeur'
 points_df = pd.read_csv("somme_stations_plateau_01_2024.csv")
@@ -20,11 +20,11 @@ points_gdf = gpd.GeoDataFrame(points_df, geometry=geometry, crs="EPSG:4326")
 points_gdf = points_gdf.to_crs(epsg=3857)
 hexagones = hexagones.to_crs(epsg=3857)
 
-jointure = gpd.sjoin(points_gdf, hexagones, how="left", predicate="within")
+jointure = gpd.sjoin(points_gdf, hexagones, how="left", predicate="intersects")
 
 # Group by l'index des hexagones ('index_right') et sommer les valeurs
 somme = jointure.groupby("index_right")["nb_trajets"].sum()
-hexagones["nb_trajets"] = hexagones.index.map(somme).fillna(0)
+hexagones["nb_trajets_par_hex"] = hexagones.index.map(somme).fillna(0)
 
 import matplotlib.pyplot as plt
 
@@ -33,7 +33,7 @@ fig, ax = plt.subplots(figsize=(10, 10))
 
 # Tracer les hexagones avec une échelle de couleurs
 hexagones.plot(
-    column="nb_trajets",        # Colonne à colorier
+    column="nb_trajets_par_hex",        # Colonne à colorier
     cmap="OrRd",                  # Colormap (Oranges-Reds)
     linewidth=0.2, edgecolor="grey",
     legend=True,                  # Affiche la légende
