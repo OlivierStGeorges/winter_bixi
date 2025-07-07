@@ -1,5 +1,11 @@
 from geopy.geocoders import Nominatim
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("WALKSCORE_API_KEY")
+
 
 def reverse_geocode(lat, lon):
     geolocator = Nominatim(user_agent="walkscore_app")
@@ -37,7 +43,6 @@ def get_walkscore(lat, lon, api_key):
         return None
 
 # Exemple d’utilisation :
-api_key = "VOTRE_CLE_API"
 lat = 45.51025293429709
 lon = -73.55677664279938
 
