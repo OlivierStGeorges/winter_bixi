@@ -5,8 +5,9 @@ from shapely.geometry import Point
 
 # Charger les hexagones (projection en mètres, ex : EPSG:3857)
 #hexagones = gpd.read_file("hexagone/GenerateTessellation_nouveau.shp")
-hexagones = gpd.read_file("hexagones_avec_longueur_protégé.shp")
-print(hexagones.crs)
+#hexagones = gpd.read_file("hexagones_avec_longueur_protégé.shp")
+hexagones = gpd.read_file("hexagones_avec_densité.shp")
+print(hexagones.columns)
 # Exemple : CSV contient les colonnes 'longitude', 'latitude', 'valeur'
 points_df = pd.read_csv("data/bd_stations_hiver_2023_2024.csv")
 print(points_df.head())
@@ -92,11 +93,11 @@ plt.savefig("nb_points_par_hexagone.png", dpi=300)
 plt.show()
 """
 
-df = hexagones[["longueur_m", "nb_trajets_par_hex"]].dropna()
+df = hexagones[["densite_es", "nb_trajets_par_hex"]].dropna()
 
 # Tracer le nuage de points
 plt.figure(figsize=(8, 6))
-plt.scatter(df["longueur_m"], df["nb_trajets_par_hex"], alpha=0.6, color="royalblue", edgecolor="k")
+plt.scatter(df["densite_es"], df["nb_trajets_par_hex"], alpha=0.6, color="royalblue", edgecolor="k")
 
 # Ajouter les titres et axes
 plt.xlabel("Longueur de piste cyclable (m)")
@@ -114,7 +115,7 @@ plt.show()
 from scipy.stats import pearsonr
 
 # Extraire les variables
-x = df["longueur_m"]
+x = df["densite_es"]
 y = df["nb_trajets_par_hex"]
 
 # Calcul de la corrélation
@@ -132,8 +133,8 @@ import seaborn as sns
 # - 'nb_trajets_par_hex' (nombre de déplacements)
 
 # 1. Découper en 5 quantiles (ou change `q=4` pour quartiles, `q=10` pour déciles, etc.)
-df["quantile"] = pd.qcut(df["longueur_m"], q=5, labels=[f"Q{i+1}" for i in range(5)], duplicates="drop")
-
+#df["quantile"] = pd.qcut(df["longueur_m"], q=5, labels=[f"Q{i+1}" for i in range(5)], duplicates="drop")
+df["quantile"] = pd.qcut(df["densite_es"], q=5, labels=[f"Q{i+1}" for i in range(5)], duplicates="drop")
 # 2. Calcul de la moyenne des déplacements par quantile
 grouped = df.groupby("quantile")["nb_trajets_par_hex"].mean().reset_index()
 
