@@ -6,7 +6,7 @@ from shapely.geometry import Point
 # Charger les hexagones (projection en mètres, ex : EPSG:3857)
 #hexagones = gpd.read_file("hexagone/GenerateTessellation_nouveau.shp")
 #hexagones = gpd.read_file("hexagones_avec_longueur_protégé.shp")
-hexagones = gpd.read_file("hexagones_avec_parc.shp")
+hexagones = gpd.read_file("hexagones_avec_nombre_universites.shp")
 print(hexagones.columns)
 # Exemple : CSV contient les colonnes 'longitude', 'latitude', 'valeur'
 points_df = pd.read_csv("bd_stations_hiver_2023_2024.csv")
@@ -93,11 +93,11 @@ plt.savefig("nb_points_par_hexagone.png", dpi=300)
 plt.show()
 """
 
-df = hexagones[["aire_parc", "nb_trajets_par_hex"]].dropna()
+df = hexagones[["nombre_uni", "nb_trajets_par_hex"]].dropna()
 
 # Tracer le nuage de points
 plt.figure(figsize=(8, 6))
-plt.scatter(df["aire_parc"], df["nb_trajets_par_hex"], alpha=0.6, color="royalblue", edgecolor="k")
+plt.scatter(df["nombre_uni"], df["nb_trajets_par_hex"], alpha=0.6, color="royalblue", edgecolor="k")
 
 # Ajouter les titres et axes
 plt.xlabel("Longueur de piste cyclable (m)")
@@ -115,7 +115,7 @@ plt.show()
 from scipy.stats import pearsonr
 
 # Extraire les variables
-x = df["aire_parc"]
+x = df["nombre_uni"]
 y = df["nb_trajets_par_hex"]
 
 # Calcul de la corrélation
@@ -134,14 +134,14 @@ import seaborn as sns
 
 # 1. Découper en 5 quantiles (ou change `q=4` pour quartiles, `q=10` pour déciles, etc.)
 #df["quantile"] = pd.qcut(df["longueur_m"], q=5, labels=[f"Q{i+1}" for i in range(5)], duplicates="drop")
-df["quantile"] = pd.qcut(df["aire_parc"], q=5, #labels=[f"Q{i+1}" for i in range(5)],
-                          duplicates="drop")
+#df["quantile"] = pd.qcut(df["aire_parc"], q=5, #labels=[f"Q{i+1}" for i in range(5)],
+                          #duplicates="drop")
 # 2. Calcul de la moyenne des déplacements par quantile
-grouped = df.groupby("quantile")["nb_trajets_par_hex"].mean().reset_index()
+grouped = df.groupby("nombre_uni")["nb_trajets_par_hex"].mean().reset_index()
 
 # 3. Tracer un barplot
 plt.figure(figsize=(8, 6))
-sns.barplot(data=grouped, x="quantile", y="nb_trajets_par_hex", palette="OrRd")
+sns.barplot(data=grouped, x="nombre_uni", y="nb_trajets_par_hex", palette="OrRd")
 
 plt.xlabel("Quantile de longueur de pistes cyclables")
 plt.ylabel("Nombre moyen de déplacements")
