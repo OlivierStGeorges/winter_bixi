@@ -131,7 +131,7 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "ete_2024"
+    season = "hiver_2425"
     if season == "ete_2024":
         hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones_ete_2024_popdens_bikepath_parcs_universites_zonage.shp")
     elif season == "hiver_2324":
