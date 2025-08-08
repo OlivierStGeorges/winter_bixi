@@ -1,4 +1,16 @@
-data/
+*.cpg
+*.dbf
+*lyrx
+*.prj
+*.sbn
+*.sbx
+*.shp
+*.shp.xml
+*.shx
+
+*.zip
+
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
