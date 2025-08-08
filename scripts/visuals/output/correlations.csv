@@ -1,0 +1,8 @@
+x_variable,y_variable,R,p_value,n_obs
+aire_parc,nb_trajets,0.0342,7.458446456924936e-08,24674
+nombre_uni,nb_trajets,0.0617,3.039634044853387e-22,24674
+walkscore_,nb_trajets,0.2363,0.0032729352901715685,153
+transitsco,nb_trajets,-0.0633,0.43725385867688754,153
+bikescore_,nb_trajets,0.381,1.1822475112479998e-06,153
+longueur_m,nb_trajets,0.0298,0.22946976993912335,1630
+densite_es,nb_trajets,0.0976,2.7173307863465246e-53,24674
