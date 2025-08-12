@@ -8,9 +8,10 @@ from generate_park_density_data import ajouter_surface_parcs_par_hexagone
 from add_university_data import ajouter_nombre_universites_par_hexagone
 from compute_distance_to_downtown import compute_distance_to_downtown
 from add_zoning_data import lister_affectations_par_hexagone
+from generate_housing_density_data import calculer_densite_logement_par_hexagone
 import yaml
 
-def load_config(path="config_hiver_2024_2025.yml"):
+def load_config(path="config_ete_2024.yml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
 
@@ -91,6 +92,13 @@ def main():
             hex_path=paths["hex_universites"],
             affectation_path=paths["affectation"],
             output_path=paths["hex_zonage"]
+        )
+
+    if steps["densite_logement"]:
+        calculer_densite_logement_par_hexagone(
+            hex_path=paths["hex_zonage"],
+            ad_path=paths["aire_diffusion_logements"],
+            output_path=paths["hex_logement"],
         )
 
 

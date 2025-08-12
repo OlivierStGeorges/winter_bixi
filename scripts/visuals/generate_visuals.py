@@ -6,6 +6,7 @@ from scipy.stats import pearsonr
 import os
 import numpy as np
 from scipy.stats import spearmanr
+import mapclassify
 
 def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/correlations.csv"):
     data = df[[x_col, y_col]].copy()
@@ -44,6 +45,39 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/c
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
     plt.savefig(f"output/{output_prefix}_scatter.png", dpi=300)
+    plt.close()
+
+    # Classer avec Jenks
+    classifier = mapclassify.NaturalBreaks(data[x_col], k=5)
+    bins = [-float("inf")] + list(classifier.bins)  # inclure min
+    data["bin_jenks"] = pd.cut(data[x_col], bins=bins, include_lowest=True)
+
+    # Grouper : taille et moyenne
+    grouped = data.groupby("bin_jenks").agg(
+        n_obs=(x_col, "count"),
+        mean_trajets=(y_col, "mean")
+    ).reset_index()
+
+    # --- Graph ---
+    fig, ax1 = plt.subplots(figsize=(8, 5))
+
+    # Histogramme des obs
+    ax1.bar(grouped["bin_jenks"].astype(str), grouped["n_obs"], color="skyblue", alpha=0.7,
+            label="Nombre d'observations")
+    ax1.set_ylabel("Nombre d'observations", color="skyblue")
+    ax1.tick_params(axis="y", labelcolor="skyblue")
+    ax1.set_xlabel("Bin Jenks")
+
+    # Courbe pour le nb moyen de trajets
+    ax2 = ax1.twinx()
+    ax2.plot(grouped["bin_jenks"].astype(str), grouped["mean_trajets"], color="darkred", marker="o",
+             label="Nb trajets moyen")
+    ax2.set_ylabel("Nombre moyen de trajets", color="darkred")
+    ax2.tick_params(axis="y", labelcolor="darkred")
+
+    plt.title("Observations et trajets moyens par bin (Jenks)")
+    fig.tight_layout()
+    plt.savefig(f"output/{output_prefix}_jenks.png", dpi=300)
     plt.close()
 
     # Barplot par quantiles
@@ -131,17 +165,17 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "hiver_2425"
+    season = "ete_2024"
     if season == "ete_2024":
-        hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones_ete_2024_popdens_bikepath_parcs_universites_zonage.shp")
+        hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement.shp")
     elif season == "hiver_2324":
-        hexagones = gpd.read_file("../../data/processed/hexagones_hiver_2023_2024_popdens_bikepath_parcs_universites_zonage.shp")
+        hexagones = gpd.read_file("../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_popdens_bikepath_parcs_universites_zonage_logement.shp")
     elif season == "hiver_2425":
-        hexagones = gpd.read_file("../../data/processed/hiver2425/hexagones_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage.shp")
+        hexagones = gpd.read_file("../../data/processed/hiver2425/hexagones_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement.shp")
     print(hexagones.columns)
     import numpy as np
     hexagones["transitsco"] = hexagones["transitsco"].replace(-1, np.nan)
-
+    season = season + "/250m"
     # Lancer l'analyse sur différentes variables
     analyser_relation(hexagones, "aire_parc", "nb_trajets", f"{season}/parc_vs_trajets",
                       correlation_csv=f"output/{season}/correlations.csv")
@@ -167,11 +201,14 @@ def main():
     analyser_relation(hexagones, "distance_c", "nb_trajets", f"{season}/distance_centre-ville_vs_trajets",
                       correlation_csv=f"output/{season}/correlations.csv")
 
+    analyser_relation(hexagones, "densite_lo", "nb_trajets", f"{season}/densite_logements_vs_trajets",
+                      correlation_csv=f"output/{season}/correlations.csv")
+
     analyser_zonage(hexagones, output_path=f"output/{season}/zonage.png")
 
     colonnes_facteurs = [
         "aire_parc", "nombre_uni", "walkscore_", "transitsco",
-        "bikescore_", "longueur_m", "densite_es", "distance_c"
+        "bikescore_", "longueur_m", "densite_es", "distance_c", "densite_lo"
     ]
 
     generer_matrice_correlation(hexagones, colonnes_facteurs,

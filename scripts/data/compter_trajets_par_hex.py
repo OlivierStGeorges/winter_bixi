@@ -7,7 +7,7 @@ def compter_trajets_par_hexagone(
         path_hexagones,
         path_stations,
         output_path,
-        epsg_metrique=3857
+        epsg_metrique=32188
 ):
     """
     Associe les stations aux hexagones, compte les trajets, et exporte un fichier GeoSpatial.
@@ -16,7 +16,7 @@ def compter_trajets_par_hexagone(
     - path_hexagones : chemin vers le fichier shapefile des hexagones
     - path_stations  : chemin vers le CSV contenant les stations avec colonnes 'lon', 'lat', 'nb_total'
     - output_path    : chemin de sortie (sans extension pour shapefile, avec pour geojson)
-    - epsg_metrique  : système de projection pour l'intersection spatiale (par défaut: EPSG:3857)
+    - epsg_metrique  : système de projection pour l'intersection spatiale
     - export_format  : "shp" ou "geojson"
     """
 
