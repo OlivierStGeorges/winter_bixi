@@ -32,14 +32,19 @@ def compter_trajets_par_hexagone(
     hexagones = hexagones.to_crs(epsg=epsg_metrique)
     stations_gdf = stations_gdf.to_crs(epsg=epsg_metrique)
 
-    # Spatial join
-    jointure = gpd.sjoin(stations_gdf, hexagones, how="left", predicate="intersects")
+    # Jointure spatiale (inner -> seulement les stations qui sont dans un hexagone)
+    jointure = gpd.sjoin(stations_gdf, hexagones, how="inner", predicate="intersects")
 
-    # Agréger
+    # Liste des hexagones qui ont au moins une station
+    hexagones_avec_station = jointure["index_right"].unique()
+
+    # Agrégation des trajets
     somme = jointure.groupby("index_right")["nb_total"].sum()
 
-    # Fusion
-    hexagones = hexagones.reset_index(drop=True)
+    # Garder uniquement les hexagones avec station
+    hexagones = hexagones.loc[hexagones_avec_station].copy()
+
+    # Ajouter la colonne des trajets (0 si aucune info)
     hexagones["nb_trajets_par_hex"] = hexagones.index.map(somme).fillna(0).astype(int)
 
     hexagones.to_file(output_path)

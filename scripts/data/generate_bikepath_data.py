@@ -39,6 +39,8 @@ def ajouter_longueur_pistes_protegees_par_hexagone(
 
     # Fusion avec hexagones
     hexagones = hexagones.merge(grouped, on="hex_index", how="left")
+
+    hexagones["longueur_m"] = hexagones["longueur_m"].fillna(0)
     hexagones["longueur_km"] = hexagones["longueur_km"].fillna(0)
 
     # Export

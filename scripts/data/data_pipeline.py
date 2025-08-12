@@ -11,7 +11,7 @@ from add_zoning_data import lister_affectations_par_hexagone
 from generate_housing_density_data import calculer_densite_logement_par_hexagone
 import yaml
 
-def load_config(path="config_ete_2024.yml"):
+def load_config(path="config_hiver_2024_2025.yml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
 

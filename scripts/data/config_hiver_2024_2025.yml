@@ -4,14 +4,15 @@ run_steps:
   generate_dataset: false
   generate_stations_db: false
   generate_walkscores: false
-  compute_distance_to_downtown: true
-  aggregate_walkscores: true
-  compter_trajets: true
-  pop_density: true
+  compute_distance_to_downtown: false
+  aggregate_walkscores: false
+  compter_trajets: false
+  pop_density: false
   bikepath_length: true
   park_surface: true
   universites: true
   zonage: true
+  densite_logement: true
 
 paths:
   year_dataset: "../../data/raw/DonneesOuvertes2025_0102030405.zip"
@@ -27,12 +28,13 @@ paths:
 
   distance_output: "../../data/processed/bd_stations_hiver_2024_2025_walkscore_distance.csv"
 
-  hexagone: "../../data/hexagone/GenerateTessellation_nouveaushp.shp"
+  hexagone: "../../data/hexagone/Tessellation_hexagones_250m.shp"
   aire_diffusion: "../../data/raw/donnees_densite/aire_diffusion_mtl_densite.shp"
   reseau_cyclable: "../../data/raw/piste_cyclable/reseau_cyclable_protege.shp"
   parcs: "../../data/raw/export(1)/export(1)-POLYGON.shp"
   universites: "../../data/raw/etablissements-meq-mes-esrishp/ES_Universitaire.shp"
   affectation: "../../data/raw/affectationpu.zip"
+  aire_diffusion_logements: "../../data/raw/donnees_densite_logements/carte_densite_logement_ad.shp"
 
   hex_walkscore: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_ws.shp"
   hex_nb_trajets: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_avec_nb_trajets.shp"
@@ -41,3 +43,4 @@ paths:
   hex_park: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_popdens_bikepath_parcs.shp"
   hex_universites: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_popdens_bikepath_parcs_universites.shp"
   hex_zonage: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage.shp"
+  hex_logement: "../../data/processed/hiver2425/hexagones250m_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement.shp"
