@@ -8,11 +8,11 @@ run_steps:
   aggregate_walkscores: false
   compter_trajets: false
   pop_density: false
-  bikepath_length: false
-  park_surface: false
-  universites: false
-  zonage: false
-  densite_logement: false
+  bikepath_length: true
+  park_surface: true
+  universites: true
+  zonage: true
+  densite_logement: true
   cegep: true
 
 paths:
@@ -31,7 +31,7 @@ paths:
 
   hexagone: "../../data/hexagone/Tessellation_hexagones_250m.shp"
   aire_diffusion: "../../data/raw/donnees_densite/aire_diffusion_mtl_densite.shp"
-  reseau_cyclable: "../../data/raw/piste_cyclable/reseau_cyclable_protege.shp"
+  reseau_cyclable: "../../data/raw/piste_cyclable/reseau_cyclable.shp"
   parcs: "../../data/raw/export(1)/export(1)-POLYGON.shp"
   universites: "../../data/raw/etablissements-meq-mes-esrishp/ES_Universitaire.shp"
   affectation: "../../data/raw/affectationpu.zip"

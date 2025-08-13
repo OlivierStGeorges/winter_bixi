@@ -3,7 +3,7 @@ from generate_stations_db import generate_stations_db
 from walkscore_processing import generate_walkscores, agg_walkscore_par_hexagone
 from hex_pop_density_processing import calculer_pop_densite_par_hexagone
 from compter_trajets_par_hex import compter_trajets_par_hexagone
-from generate_bikepath_data import ajouter_longueur_pistes_protegees_par_hexagone
+from generate_bikepath_data import ajouter_longueur_pistes_cyclables_par_hexagone
 from generate_park_density_data import ajouter_surface_parcs_par_hexagone
 from add_university_data import ajouter_nombre_universites_par_hexagone
 from compute_distance_to_downtown import compute_distance_to_downtown
@@ -69,7 +69,7 @@ def main():
         )
 
     if steps["bikepath_length"]:
-        ajouter_longueur_pistes_protegees_par_hexagone(
+        ajouter_longueur_pistes_cyclables_par_hexagone(
             path_hexagones=paths["hex_popdens"],
             path_reseau=paths["reseau_cyclable"],
             output_path=paths["hex_bikepath"]
