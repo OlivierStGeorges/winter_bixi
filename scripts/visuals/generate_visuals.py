@@ -165,11 +165,11 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "hiver_2425"
+    season = "hiver_2324"
     if season == "ete_2024":
         hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement.shp")
     elif season == "hiver_2324":
-        hexagones = gpd.read_file("../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_popdens_bikepath_parcs_universites_zonage_logement.shp")
+        hexagones = gpd.read_file("../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2425":
         hexagones = gpd.read_file("../../data/processed/hiver2425/hexagones250m_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement.shp")
     print(hexagones.columns)
@@ -204,11 +204,14 @@ def main():
     analyser_relation(hexagones, "densite_lo", "nb_trajets", f"{season}/densite_logements_vs_trajets",
                       correlation_csv=f"output/{season}/correlations.csv")
 
+    analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
+                      correlation_csv=f"output/{season}/correlations.csv")
+
     analyser_zonage(hexagones, output_path=f"output/{season}/zonage.png")
 
     colonnes_facteurs = [
         "aire_parc", "nombre_uni", "walkscore_", "transitsco",
-        "bikescore_", "longueur_m", "densite_es", "distance_c", "densite_lo"
+        "bikescore_", "longueur_m", "densite_es", "distance_c", "densite_lo", "nb_cegep"
     ]
 
     generer_matrice_correlation(hexagones, colonnes_facteurs,
