@@ -8,13 +8,11 @@ import numpy as np
 from scipy.stats import spearmanr
 import mapclassify
 
-def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../output/correlations.csv"):
+def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../output/correlations.csv", x_unit=""):
     data = df[[x_col, y_col]].copy()
     data = data.replace([-1], pd.NA).dropna()
 
     r_sp, p_sp = spearmanr(data[x_col], data[y_col])
-
-    # Corrélation de Pearson
     r, p_value = pearsonr(data[x_col], data[y_col])
     print(f"{output_prefix} - R: {r:.3f}, p-value: {p_value:.3e}")
 
@@ -29,7 +27,6 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
         "spearman_p": p_sp
     }])
 
-
     os.makedirs("../../output", exist_ok=True)
     if os.path.exists(correlation_csv):
         corr_df.to_csv(correlation_csv, mode="a", header=False, index=False)
@@ -39,7 +36,8 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
     # Scatterplot
     plt.figure(figsize=(8, 6))
     plt.scatter(data[x_col], data[y_col], alpha=0.6, color="royalblue", edgecolor="k")
-    plt.xlabel(x_col)
+    xlabel_text = f"{x_col} ({x_unit})" if x_unit else x_col
+    plt.xlabel(xlabel_text)
     plt.ylabel(y_col)
     plt.title(f"{y_col} vs {x_col}\nR = {r:.2f}, p = {p_value:.2e}")
     plt.grid(True, linestyle="--", alpha=0.5)
@@ -60,15 +58,12 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
 
     # --- Graph ---
     fig, ax1 = plt.subplots(figsize=(8, 5))
-
-    # Histogramme des obs
     ax1.bar(grouped["bin_jenks"].astype(str), grouped["n_obs"], color="skyblue", alpha=0.7,
             label="Nombre d'observations")
     ax1.set_ylabel("Nombre d'observations", color="skyblue")
     ax1.tick_params(axis="y", labelcolor="skyblue")
-    ax1.set_xlabel("Bin Jenks")
+    ax1.set_xlabel(f"Bin Jenks ({x_unit})" if x_unit else "Bin Jenks")
 
-    # Courbe pour le nb moyen de trajets
     ax2 = ax1.twinx()
     ax2.plot(grouped["bin_jenks"].astype(str), grouped["mean_trajets"], color="darkred", marker="o",
              label="Nb trajets moyen")
@@ -86,7 +81,7 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
 
     plt.figure(figsize=(8, 6))
     sns.barplot(data=grouped, x="quantile", y=y_col, palette="OrRd")
-    plt.xlabel(f"Quantile de {x_col}")
+    plt.xlabel(f"Quantile de {x_col} ({x_unit})" if x_unit else f"Quantile de {x_col}")
     plt.ylabel(f"Moyenne de {y_col}")
     plt.title(f"{y_col} moyen selon {x_col} (par quantiles)")
     plt.grid(axis="y", linestyle="--", alpha=0.5)
@@ -98,12 +93,13 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
     plt.figure(figsize=(8, 5))
     sns.histplot(data[x_col], kde=True, color="skyblue", edgecolor="k")
     plt.title(f"Distribution de {x_col}")
-    plt.xlabel(x_col)
+    plt.xlabel(f"{x_col} ({x_unit})" if x_unit else x_col)
     plt.ylabel("Fréquence")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
     plt.savefig(f"../../output/{output_prefix}_hist_{x_col}.png", dpi=300)
     plt.close()
+
 
 def generer_matrice_correlation(df, colonnes, output_path="../../output/correlation_matrix.png"):
     """
@@ -178,7 +174,7 @@ def main():
     season = season + "/250m"
     # Lancer l'analyse sur différentes variables
     analyser_relation(hexagones, "aire_parc", "nb_trajets", f"{season}/parc_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha")
 
     analyser_relation(hexagones, "nombre_uni", "nb_trajets", f"{season}/nb_universite_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv")
@@ -193,25 +189,25 @@ def main():
                       correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "l_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
 
     analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
 
     analyser_relation(hexagones, "p4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
 
     analyser_relation(hexagones, "np4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_non_protege_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
 
     analyser_relation(hexagones, "densite_es", "nb_trajets", f"{season}/densite_population_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha/km²")
 
     analyser_relation(hexagones, "distance_c", "nb_trajets", f"{season}/distance_centre-ville_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="km")
 
     analyser_relation(hexagones, "densite_lo", "nb_trajets", f"{season}/densite_logements_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="log/ha")
 
     analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv")

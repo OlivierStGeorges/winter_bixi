@@ -42,6 +42,9 @@ def ajouter_surface_parcs_par_hexagone(
     gdf_hex = gdf_hex.merge(aire_par_hex, on="hex_id", how="left")
     gdf_hex["aire_parc"] = gdf_hex["aire_inter"].fillna(0)
 
+    # convertir en hectare
+    gdf_hex['aire_parc'] = gdf_hex['aire_parc'] / 10000
+
     # Export du fichier enrichi
     gdf_hex.to_file(output_path)
     print(f"✅ Export effectué : {output_path}")
