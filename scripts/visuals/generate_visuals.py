@@ -167,7 +167,7 @@ def main():
     # Chargement des données
     season = "hiver_2324"
     if season == "ete_2024":
-        hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement.shp")
+        hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2324":
         hexagones = gpd.read_file("../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2425":
@@ -192,13 +192,16 @@ def main():
     analyser_relation(hexagones, "bikescore_", "nb_trajets", f"{season}/bikescore_vs_trajets",
                       correlation_csv=f"output/{season}/correlations.csv")
 
-    analyser_relation(hexagones, "long_tot_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
+    analyser_relation(hexagones, "l_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
                       correlation_csv=f"output/{season}/correlations.csv")
 
-    analyser_relation(hexagones, "tot_4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
+    analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
                       correlation_csv=f"output/{season}/correlations.csv")
 
-    analyser_relation(hexagones, "prot_4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
+    analyser_relation(hexagones, "p4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
+                      correlation_csv=f"output/{season}/correlations.csv")
+
+    analyser_relation(hexagones, "np4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_non_protege_vs_trajets",
                       correlation_csv=f"output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "densite_es", "nb_trajets", f"{season}/densite_population_vs_trajets",
@@ -217,7 +220,7 @@ def main():
 
     colonnes_facteurs = [
         "aire_parc", "nombre_uni", "walkscore_", "transitsco",
-        "bikescore_", "long_tot_m", "tot_4s_m", "prot_4s_m", "densite_es", "distance_c", "densite_lo", "nb_cegep"
+        "bikescore_", "l_m", "l4s_m", "p4s_m", "np4s_m", "densite_es", "distance_c", "densite_lo", "nb_cegep"
     ]
 
     generer_matrice_correlation(hexagones, colonnes_facteurs,
