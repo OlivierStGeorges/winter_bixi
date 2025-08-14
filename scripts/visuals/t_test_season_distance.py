@@ -68,8 +68,8 @@ for season, file in files.items():
 
 # Sauvegarde des stats
 df_stats = pd.concat(stats_list, ignore_index=True)
-os.makedirs("output", exist_ok=True)
-stats_file = "output/travel_distance_stats_filtered_sans0.csv"
+os.makedirs("../../output", exist_ok=True)
+stats_file = "../../output/travel_distance_stats_filtered_sans0.csv"
 df_stats.to_csv(stats_file, index=False)
 print(f"\nStats globales sauvegardées dans {stats_file}")
 print(df_stats)

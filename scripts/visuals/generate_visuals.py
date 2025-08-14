@@ -8,7 +8,7 @@ import numpy as np
 from scipy.stats import spearmanr
 import mapclassify
 
-def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/correlations.csv"):
+def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../output/correlations.csv"):
     data = df[[x_col, y_col]].copy()
     data = data.replace([-1], pd.NA).dropna()
 
@@ -30,7 +30,7 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/c
     }])
 
 
-    os.makedirs("output", exist_ok=True)
+    os.makedirs("../../output", exist_ok=True)
     if os.path.exists(correlation_csv):
         corr_df.to_csv(correlation_csv, mode="a", header=False, index=False)
     else:
@@ -44,7 +44,7 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/c
     plt.title(f"{y_col} vs {x_col}\nR = {r:.2f}, p = {p_value:.2e}")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.savefig(f"output/{output_prefix}_scatter.png", dpi=300)
+    plt.savefig(f"../../output/{output_prefix}_scatter.png", dpi=300)
     plt.close()
 
     # Classer avec Jenks
@@ -77,7 +77,7 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/c
 
     plt.title("Observations et trajets moyens par bin (Jenks)")
     fig.tight_layout()
-    plt.savefig(f"output/{output_prefix}_jenks.png", dpi=300)
+    plt.savefig(f"../../output/{output_prefix}_jenks.png", dpi=300)
     plt.close()
 
     # Barplot par quantiles
@@ -91,7 +91,7 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/c
     plt.title(f"{y_col} moyen selon {x_col} (par quantiles)")
     plt.grid(axis="y", linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.savefig(f"output/{output_prefix}_barplot.png", dpi=300)
+    plt.savefig(f"../../output/{output_prefix}_barplot.png", dpi=300)
     plt.close()
 
     # Histogramme de x_col
@@ -102,10 +102,10 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="output/c
     plt.ylabel("Fréquence")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
-    plt.savefig(f"output/{output_prefix}_hist_{x_col}.png", dpi=300)
+    plt.savefig(f"../../output/{output_prefix}_hist_{x_col}.png", dpi=300)
     plt.close()
 
-def generer_matrice_correlation(df, colonnes, output_path="output/correlation_matrix.png"):
+def generer_matrice_correlation(df, colonnes, output_path="../../output/correlation_matrix.png"):
     """
     Calcule et trace la matrice de corrélation entre les colonnes spécifiées.
 
@@ -178,45 +178,45 @@ def main():
     season = season + "/250m"
     # Lancer l'analyse sur différentes variables
     analyser_relation(hexagones, "aire_parc", "nb_trajets", f"{season}/parc_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "nombre_uni", "nb_trajets", f"{season}/nb_universite_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "walkscore_", "nb_trajets", f"{season}/walkscore_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "transitsco", "nb_trajets", f"{season}/transitscore_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "bikescore_", "nb_trajets", f"{season}/bikescore_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "l_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "p4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "np4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_non_protege_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "densite_es", "nb_trajets", f"{season}/densite_population_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "distance_c", "nb_trajets", f"{season}/distance_centre-ville_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "densite_lo", "nb_trajets", f"{season}/densite_logements_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
-                      correlation_csv=f"output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv")
 
-    analyser_zonage(hexagones, output_path=f"output/{season}/zonage.png")
+    analyser_zonage(hexagones, output_path=f"../../output/{season}/zonage.png")
 
     colonnes_facteurs = [
         "aire_parc", "nombre_uni", "walkscore_", "transitsco",
@@ -224,7 +224,7 @@ def main():
     ]
 
     generer_matrice_correlation(hexagones, colonnes_facteurs,
-                                output_path=f"output/{season}/matrice_correlation_facteurs.png")
+                                output_path=f"../../output/{season}/matrice_correlation_facteurs.png")
 
 
 if __name__ == "__main__":

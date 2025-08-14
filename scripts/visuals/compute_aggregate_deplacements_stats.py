@@ -33,7 +33,7 @@ for season, filepath in files.items():
 df_counts = pd.concat(counts_list, ignore_index=True)
 
 # Sauvegarder
-os.makedirs("output", exist_ok=True)
+os.makedirs("../../output", exist_ok=True)
 df_counts.to_csv("output/monthly_trip_counts.csv", index=False)
 
 print("Compilation des déplacements par mois sauvegardée dans output/monthly_trip_counts.csv")

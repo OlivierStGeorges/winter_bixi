@@ -185,6 +185,6 @@ for season, file in files.items():
 df_stats = pd.concat(stats_list, ignore_index=True)
 
 # Sauvegarder stats dans CSV
-stats_file = "output/travel_distance_stats_filtered_sans0.csv"
+stats_file = "../../output/travel_distance_stats_filtered_sans0.csv"
 df_stats.to_csv(stats_file, index=False)
 print(f"\nStats globales sauvegardées dans {stats_file}")
