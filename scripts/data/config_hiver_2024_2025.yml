@@ -13,6 +13,7 @@ run_steps:
   universites: true
   zonage: true
   densite_logement: true
+  cegep: true
 
 paths:
   year_dataset: "../../data/raw/DonneesOuvertes2025_0102030405.zip"
@@ -35,6 +36,7 @@ paths:
   universites: "../../data/raw/etablissements-meq-mes-esrishp/ES_Universitaire.shp"
   affectation: "../../data/raw/affectationpu.zip"
   aire_diffusion_logements: "../../data/raw/donnees_densite_logements/carte_densite_logement_ad.shp"
+  cegep: "../../data/raw/etablissements-meq-mes-esrishp/ES_Collegial.shp"
 
   hex_walkscore: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_ws.shp"
   hex_nb_trajets: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_avec_nb_trajets.shp"
@@ -44,3 +46,4 @@ paths:
   hex_universites: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_popdens_bikepath_parcs_universites.shp"
   hex_zonage: "../../data/processed/hiver2425/hexagones_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage.shp"
   hex_logement: "../../data/processed/hiver2425/hexagones250m_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement.shp"
+  hex_cegep: "../../data/processed/hiver2425/hexagones250m_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp"

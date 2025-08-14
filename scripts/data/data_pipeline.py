@@ -12,7 +12,7 @@ from generate_housing_density_data import calculer_densite_logement_par_hexagone
 from add_college_data import ajouter_nombre_cegep_par_hexagone
 import yaml
 
-def load_config(path="config_hiver_2023_2024.yml"):
+def load_config(path="config_ete_2024.yml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
 

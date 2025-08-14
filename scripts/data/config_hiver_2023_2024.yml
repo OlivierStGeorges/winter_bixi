@@ -4,10 +4,10 @@ run_steps:
   generate_dataset: false
   generate_stations_db: false
   generate_walkscores: false
-  compute_distance_to_downtown: false
-  aggregate_walkscores: false
-  compter_trajets: false
-  pop_density: false
+  compute_distance_to_downtown: true
+  aggregate_walkscores: true
+  compter_trajets: true
+  pop_density: true
   bikepath_length: true
   park_surface: true
   universites: true
