@@ -8,6 +8,7 @@ import unidecode
 import random
 import geopandas as gpd
 from shapely.geometry import Point
+import numpy as np
 
 def safe_request_get(url, headers=None, retries=3, delay=2):
     for attempt in range(1, retries + 1):
@@ -120,6 +121,9 @@ def agg_walkscore_par_hexagone(
     gdf_hex = gpd.read_file(path_hexagones).to_crs(epsg=epsg)
 
     points_df = pd.read_csv(path_walkscore)
+    cols = ['walkscore', 'transitscore', 'bikescore']
+    points_df[cols] = points_df[cols].replace({0: np.nan, -1: np.nan})
+
     geometry = [Point(xy) for xy in zip(points_df["lon"], points_df["lat"])]
     points_gdf = gpd.GeoDataFrame(points_df, geometry=geometry, crs="EPSG:4326").to_crs(epsg=epsg)
 
