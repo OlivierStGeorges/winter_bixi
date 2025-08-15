@@ -123,8 +123,6 @@ def agg_walkscore_par_hexagone(
     geometry = [Point(xy) for xy in zip(points_df["lon"], points_df["lat"])]
     points_gdf = gpd.GeoDataFrame(points_df, geometry=geometry, crs="EPSG:4326").to_crs(epsg=epsg)
 
-    gdf_hex["hex_id"] = gdf_hex.index.astype(str)
-
     jointure = gpd.sjoin(points_gdf, gdf_hex, how="left", predicate="intersects")
 
     moyenne_ws = jointure.groupby("index_right")["walkscore"].mean()

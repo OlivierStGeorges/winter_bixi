@@ -7,6 +7,7 @@ run_steps:
   compute_distance_to_downtown: true
   aggregate_walkscores: true
   compter_trajets: true
+  clip_mtl: true
   pop_density: true
   bikepath_length: true
   park_surface: true
@@ -31,6 +32,7 @@ paths:
 
   hexagone: "../../data/hexagone/Tessellation_hexagones_250m.shp"
 
+  clip_mtl_polygon: "../../data/raw/perimurb.zip"
   aire_diffusion: "../../data/raw/donnees_densite/aire_diffusion_mtl_densite.shp"
   reseau_cyclable: "../../data/raw/piste_cyclable/reseau_cyclable.shp"
   parcs: "../../data/raw/export(1)/export(1)-POLYGON.shp"
@@ -39,8 +41,10 @@ paths:
   aire_diffusion_logements: "../../data/raw/donnees_densite_logements/carte_densite_logement_ad.shp"
   cegep: "../../data/raw/etablissements-meq-mes-esrishp/ES_Collegial.shp"
 
+  hex_index: "../../data/processed/ete_2024/hexagones250m_ete_2024_index.shp"
   hex_walkscore: "../../data/processed/ete_2024/hexagones250m_ete_2024_ws.shp"
   hex_nb_trajets: "../../data/processed/ete_2024/hexagones250m_ete_2024_ws_avec_nb_trajets.shp"
+  hex_clip: "../../data/processed/ete_2024/hexagones250m_ete_2024_ws_avec_nb_trajets_clipped.shp"
   hex_popdens: "../../data/processed/ete_2024/hexagones250m_ete_2024_popdens.shp"
   hex_bikepath: "../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath.shp"
   hex_park: "../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs.shp"

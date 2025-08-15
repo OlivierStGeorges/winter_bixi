@@ -16,21 +16,18 @@ def lister_affectations_par_hexagone(
     gdf_hex = gdf_hex.to_crs(crs_proj)
     gdf_affect = gdf_affect.to_crs(crs_proj)
 
-    # 3. Nettoyage
-    gdf_hex["hex_id"] = gdf_hex.index.astype(str)
-
     # 4. Intersection
     inter = gpd.overlay(gdf_hex, gdf_affect, how="intersection")
 
     # 5. Extraction des catégories par hexagone
     affectations_par_hex = (
-        inter.groupby("hex_id")[colonne_affectation]
+        inter.groupby("hex_index")[colonne_affectation]
         .apply(lambda x: sorted(set(x.dropna())))
         .reset_index()
     )
 
     # 6. Fusion avec les hexagones
-    gdf_hex = gdf_hex.merge(affectations_par_hex, on="hex_id", how="left")
+    gdf_hex = gdf_hex.merge(affectations_par_hex, on="hex_index", how="left")
     gdf_hex[colonne_affectation] = gdf_hex[colonne_affectation].apply(
         lambda x: str(x) if isinstance(x, list) else "[]"
     )

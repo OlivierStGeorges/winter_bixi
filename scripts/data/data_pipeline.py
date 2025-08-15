@@ -10,6 +10,8 @@ from compute_distance_to_downtown import compute_distance_to_downtown
 from add_zoning_data import lister_affectations_par_hexagone
 from generate_housing_density_data import calculer_densite_logement_par_hexagone
 from add_college_data import ajouter_nombre_cegep_par_hexagone
+from clip_montreal import clip_mtl
+from create_index import create_index
 import yaml
 
 def load_config(path="config_ete_2024.yml"):
@@ -47,9 +49,11 @@ def main():
             paths['distance_output']
         )
 
+    create_index(paths["hexagone"], paths['hex_index'])
+
     if steps["aggregate_walkscores"]:
         agg_walkscore_par_hexagone(
-            path_hexagones=paths["hexagone"],
+            path_hexagones=paths["hex_index"],
             path_walkscore=paths["distance_output"],
             output_path=paths["hex_walkscore"],
         )
@@ -60,6 +64,13 @@ def main():
             path_stations=paths["distance_output"],
             output_path=paths["hex_nb_trajets"]
         )
+    if steps['clip_mtl']:
+        clip_mtl(
+            input_path=paths["hex_nb_trajets"],
+            clip_path=paths["clip_mtl_polygon"],
+            output_path=paths["hex_clip"]
+        )
+        paths['hex_nb_trajets'] = paths['hex_clip']
 
     if steps["pop_density"]:
         calculer_pop_densite_par_hexagone(
@@ -88,6 +99,7 @@ def main():
             path_universites=paths["universites"],
             output_path=paths["hex_universites"]
         )
+
     if steps["zonage"]:
         lister_affectations_par_hexagone(
             hex_path=paths["hex_universites"],

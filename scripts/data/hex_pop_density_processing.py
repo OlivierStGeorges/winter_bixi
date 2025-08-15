@@ -16,34 +16,39 @@ def calculer_pop_densite_par_hexagone(
     gdf_hex = gdf_hex.to_crs(crs_proj)
     gdf_ad = gdf_ad.to_crs(crs_proj)
 
-    # 3. Préparer les données
-    gdf_ad['population'] = gdf_ad[colonne_population]
-    gdf_hex["hex_id"] = gdf_hex.index.astype(str)
+    # 3. Ajouter un identifiant unique
+    gdf_ad = gdf_ad.reset_index().rename(columns={"index": "ad_index"})
 
-    # 4. Aire des aires de diffusion
+    # 4. Préparer les données AD
+    gdf_ad["population"] = gdf_ad[colonne_population]
     gdf_ad["aire_ad"] = gdf_ad.geometry.area
+    gdf_ad["densite_ad"] = gdf_ad["population"] / gdf_ad["aire_ad"] * 1e6  # hab/km²
 
-    # 5. Intersection hexagones x aires
+    # 5. Intersection hexagones x AD
     inter = gpd.overlay(gdf_hex, gdf_ad, how="intersection")
 
-    # 6. Aire des intersections
+    # 6. Calcul de l’aire d’intersection
     inter["aire_inter"] = inter.geometry.area
 
-    # 7. Population transférée à chaque intersection
-    inter["pop_inter"] = inter["population"] * (inter["aire_inter"] / inter["aire_ad"])
+    # 7. Moyenne pondérée des densités par hexagone
+    inter["densite_ponderee"] = inter["densite_ad"] * inter["aire_inter"]
+    densite_par_hex = (
+        inter.groupby("hex_index")
+        .agg({"densite_ponderee": "sum", "aire_inter": "sum"})
+        .reset_index()
+    )
+    densite_par_hex["densite_pop_ponderee"] = (
+        densite_par_hex["densite_ponderee"] / densite_par_hex["aire_inter"]
+    )
 
-    # 8. Agrégation par hexagone
-    pop_par_hex = inter.groupby("hex_id").agg({"pop_inter": "sum"}).reset_index()
+    # 8. Fusion avec les hexagones
+    gdf_hex = gdf_hex.merge(
+        densite_par_hex[["hex_index", "densite_pop_ponderee"]],
+        on="hex_index", how="left"
+    )
+    gdf_hex["densite_es"] = gdf_hex["densite_pop_ponderee"].fillna(0)
 
-    # 9. Fusion avec les hexagones
-    gdf_hex = gdf_hex.merge(pop_par_hex, on="hex_id", how="left")
-    gdf_hex["pop_inter"] = gdf_hex["pop_inter"].fillna(0)
-
-    # 10. Densité (hab/km²)
-    gdf_hex["aire_hex"] = gdf_hex.geometry.area
-    gdf_hex["densite_estimee"] = gdf_hex["pop_inter"] / gdf_hex["aire_hex"] * 1e6
-
-    # 11. Export
+    # 9. Export
     gdf_hex.to_file(output_path)
 
     return gdf_hex

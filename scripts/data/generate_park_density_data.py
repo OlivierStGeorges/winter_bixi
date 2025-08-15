@@ -23,9 +23,6 @@ def ajouter_surface_parcs_par_hexagone(
     gdf_hex = gdf_hex.to_crs(epsg=epsg)
     gdf_parc = gdf_parc.to_crs(epsg=epsg)
 
-    # Ajouter ID unique aux hexagones
-    gdf_hex["hex_id"] = gdf_hex.index.astype(str)
-
     # Calculer l'aire des polygones de parc
     gdf_parc["aire_parc"] = gdf_parc.geometry.area
 
@@ -36,10 +33,10 @@ def ajouter_surface_parcs_par_hexagone(
     inter["aire_inter"] = inter.geometry.area
 
     # Agrégation par hexagone
-    aire_par_hex = inter.groupby("hex_id")["aire_inter"].sum().reset_index()
+    aire_par_hex = inter.groupby("hex_index")["aire_inter"].sum().reset_index()
 
     # Fusion avec la grille d’origine
-    gdf_hex = gdf_hex.merge(aire_par_hex, on="hex_id", how="left")
+    gdf_hex = gdf_hex.merge(aire_par_hex, on="hex_index", how="left")
     gdf_hex["aire_parc"] = gdf_hex["aire_inter"].fillna(0)
 
     # convertir en hectare

@@ -10,9 +10,6 @@ def ajouter_nombre_cegep_par_hexagone(path_hexagones, path_cegep, output_path):
     hexagones = hexagones.to_crs(epsg=32188)
     cegeps = cegeps.to_crs(epsg=32188)
 
-    # 3. Index clair
-#    hexagones = hexagones.reset_index().rename(columns={"index": "hex_index"})
-
     # 4. Jointure spatiale
     cegeps_dans_hex = gpd.sjoin(cegeps, hexagones, how="left", predicate='within')
 

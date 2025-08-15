@@ -10,9 +10,6 @@ def ajouter_nombre_universites_par_hexagone(path_hexagones, path_universites, ou
     hexagones = hexagones.to_crs(epsg=32188)
     universites = universites.to_crs(epsg=32188)
 
-    # 3. Index clair
-    hexagones = hexagones.reset_index().rename(columns={"index": "hex_index"})
-
     # 4. Jointure spatiale
     universites_dans_hex = gpd.sjoin(universites, hexagones, how="left", predicate='within')
 
