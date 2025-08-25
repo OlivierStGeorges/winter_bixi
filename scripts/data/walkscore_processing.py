@@ -134,12 +134,17 @@ def agg_walkscore_par_hexagone(
     moyenne_bs = jointure.groupby("index_right")["bikescore"].mean()
     moyenne_distance = jointure.groupby("index_right")["distance_to_downtown"].mean()
 
-    gdf_hex["walkscore_moyen"] = gdf_hex.index.map(moyenne_ws)
-    gdf_hex["transitscore_moyen"] = gdf_hex.index.map(moyenne_ts)
-    gdf_hex["bikescore_moyen"] = gdf_hex.index.map(moyenne_bs)
+    gdf_hex["walk_sc_mo"] = gdf_hex.index.map(moyenne_ws)
+    gdf_hex["tran_sc_mo"] = gdf_hex.index.map(moyenne_ts)
+    gdf_hex["bike_sc_mo"] = gdf_hex.index.map(moyenne_bs)
     gdf_hex["distance_cbd"] = gdf_hex.index.map(moyenne_distance)
 
-    print(gdf_hex[["walkscore_moyen", "transitscore_moyen", "bikescore_moyen"]].describe())
+    print('heheheheh'
+          'wewe'
+          'wewee'
+          'we')
+
+    #print(gdf_hex[["walkscore_moyen", "transitscore_moyen", "bikescore_moyen"]].describe())
 
     gdf_hex.to_file(output_path)
     print(f"✅ Export effectué : {output_path}")

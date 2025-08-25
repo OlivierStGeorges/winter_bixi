@@ -161,7 +161,7 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "hiver_2425"
+    season = "ete_2024"
     if season == "ete_2024":
         hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2324":
@@ -169,8 +169,8 @@ def main():
     elif season == "hiver_2425":
         hexagones = gpd.read_file("../../data/processed/hiver2425/hexagones250m_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     print(hexagones.columns)
-    import numpy as np
-    hexagones["transitsco"] = hexagones["transitsco"].replace(-1, np.nan)
+
+    hexagones["tran_sc_mo"] = hexagones["tran_sc_mo"].replace(-1, np.nan)
     season = season + "/250m"
     # Lancer l'analyse sur différentes variables
     analyser_relation(hexagones, "aire_parc", "nb_trajets", f"{season}/parc_vs_trajets",
@@ -179,13 +179,13 @@ def main():
     analyser_relation(hexagones, "nombre_uni", "nb_trajets", f"{season}/nb_universite_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv")
 
-    analyser_relation(hexagones, "walkscore_", "nb_trajets", f"{season}/walkscore_vs_trajets",
+    analyser_relation(hexagones, "walk_sc_mo", "nb_trajets", f"{season}/walkscore_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv")
 
-    analyser_relation(hexagones, "transitsco", "nb_trajets", f"{season}/transitscore_vs_trajets",
+    analyser_relation(hexagones, "tran_sc_mo", "nb_trajets", f"{season}/transitscore_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv")
 
-    analyser_relation(hexagones, "bikescore_", "nb_trajets", f"{season}/bikescore_vs_trajets",
+    analyser_relation(hexagones, "bike_sc_mo", "nb_trajets", f"{season}/bikescore_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv")
 
     analyser_relation(hexagones, "l_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
@@ -215,8 +215,8 @@ def main():
     analyser_zonage(hexagones, output_path=f"../../output/{season}/zonage.png")
 
     colonnes_facteurs = [
-        "aire_parc", "nombre_uni", "walkscore_", "transitsco",
-        "bikescore_", "l_m", "l4s_m", "p4s_m", "np4s_m", "densite_es", "distance_c", "densite_lo", "nb_cegep"
+        "aire_parc", "nombre_uni", "walk_sc_mo", "tran_sc_mo", "bike_sc_mo", "l_m", "l4s_m", "p4s_m", "np4s_m",
+        "densite_es", "distance_c", "densite_lo", "nb_cegep"
     ]
 
     generer_matrice_correlation(hexagones, colonnes_facteurs,

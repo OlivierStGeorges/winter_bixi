@@ -28,7 +28,7 @@ def ajouter_longueur_pistes_cyclables_par_hexagone(
         grouped[col.replace("_m", "_km")] = grouped[col] / 1000
 
     hexagones = hexagones.merge(grouped, on="hex_index", how="left")
-    for col in ["l_km", "l4s_km", "p4s_km", "np4s_km"]:
+    for col in ["l_km", "l4s_km", "p4s_km", "np4s_km", "l_m", "l4s_m", "p4s_m", "np4s_m"]:
         hexagones[col] = hexagones[col].fillna(0)
 
     hexagones.to_file(output_path)
