@@ -7,6 +7,7 @@ run_steps:
   compute_distance_to_downtown: true
   aggregate_walkscores: true
   compter_trajets: true
+  clip_mtl: false
   pop_density: true
   bikepath_length: true
   park_surface: true
@@ -38,6 +39,7 @@ paths:
   aire_diffusion_logements: "../../data/raw/donnees_densite_logements/carte_densite_logement_ad.shp"
   cegep: "../../data/raw/etablissements-meq-mes-esrishp/ES_Collegial.shp"
 
+  hex_index: "../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_index.shp"
   hex_walkscore: "../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_ws.shp"
   hex_nb_trajets: "../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_avec_nb_trajets.shp"
   hex_popdens: "../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_popdens.shp"

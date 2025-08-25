@@ -14,7 +14,7 @@ from clip_montreal import clip_mtl
 from create_index import create_index
 import yaml
 
-def load_config(path="config_hiver_2023_2024.yml"):
+def load_config(path="config_hiver_2024_2025.yml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
 
