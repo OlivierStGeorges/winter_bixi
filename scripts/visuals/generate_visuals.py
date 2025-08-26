@@ -29,9 +29,15 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
 
     os.makedirs("../../output", exist_ok=True)
     if os.path.exists(correlation_csv):
-        corr_df.to_csv(correlation_csv, mode="a", header=False, index=False)
+        corr_df.to_csv(correlation_csv,
+                       sep=";",  # séparateur de colonnes
+                       decimal=",",
+                       mode="a", header=False, index=False)
     else:
-        corr_df.to_csv(correlation_csv, index=False)
+        corr_df.to_csv(correlation_csv,
+                       sep=";",  # séparateur de colonnes
+                       decimal=",",
+                       index=False)
 
     # Scatterplot
     plt.figure(figsize=(8, 6))
@@ -161,7 +167,7 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "hiver_2324"
+    season = "hiver_2425"
     if season == "ete_2024":
         hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2324":
