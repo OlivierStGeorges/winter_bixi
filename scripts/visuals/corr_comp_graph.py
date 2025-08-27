@@ -82,8 +82,7 @@ def plot_correlation(R_col, p_col, output_file="correlations.png"):
     # Mise en forme
     ax.set_yticks(y)
     ax.set_yticklabels(labels)
-    ax.set_xlabel(f"{R_col} coefficient")
-    ax.set_title(f"Corrélations ({R_col})")
+    ax.set_xlabel(f"Coefficient R")
     plt.tight_layout()
     plt.savefig(output_file, dpi=300)
     plt.close()
