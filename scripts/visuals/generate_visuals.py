@@ -8,7 +8,8 @@ import numpy as np
 from scipy.stats import spearmanr
 import mapclassify
 
-def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../output/correlations.csv", x_unit=""):
+def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../output/correlations.csv", x_unit="",
+                      decimals=2):
     data = df[[x_col, y_col]].copy()
     data = data.replace([-1], pd.NA).dropna()
 
@@ -56,21 +57,24 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
         mean_trajets=(y_col, "mean")
     ).reset_index()
 
+    # Formatter les labels des intervalles Jenks
+    grouped["bin_label"] = grouped["bin_jenks"].apply(
+        lambda x: f"[{x.left:.{decimals}f}, {x.right:.{decimals}f}]"
+    )
+
     # --- Graph ---
     fig, ax1 = plt.subplots(figsize=(8, 5))
-    ax1.bar(grouped["bin_jenks"].astype(str), grouped["n_obs"], color="skyblue", alpha=0.7,
-            label="Nombre d'observations")
+    ax1.bar(grouped["bin_label"], grouped["n_obs"], color="skyblue", alpha=0.7, label="Nombre d'observations")
     ax1.set_ylabel("Nombre d'observations", color="skyblue")
     ax1.tick_params(axis="y", labelcolor="skyblue")
-    ax1.set_xlabel(f"Bin Jenks ({x_unit})" if x_unit else "Bin Jenks")
+    ax1.set_xlabel(f"Seuils naturels (Jenks) [{x_unit}]" if x_unit else "Seuils naturels (Jenks)")
 
     ax2 = ax1.twinx()
-    ax2.plot(grouped["bin_jenks"].astype(str), grouped["mean_trajets"], color="darkred", marker="o",
-             label="Nb trajets moyen")
+    ax2.plot(grouped["bin_label"], grouped["mean_trajets"], color="darkred", marker="o", label="Nb trajets moyen")
     ax2.set_ylabel("Nombre moyen de trajets", color="darkred")
     ax2.tick_params(axis="y", labelcolor="darkred")
 
-    plt.title("Observations et trajets moyens par bin (Jenks)")
+#    plt.title("Observations et trajets moyens par bin (Jenks)")
     fig.tight_layout()
     plt.savefig(f"../../output/{output_prefix}_jenks.png", dpi=300)
     plt.close()
@@ -161,7 +165,7 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "hiver_2324"
+    season = "ete_2024"
     if season == "ete_2024":
         hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2324":
@@ -173,43 +177,43 @@ def main():
     season = season + "/250m"
     # Lancer l'analyse sur différentes variables
     analyser_relation(hexagones, "aire_parc", "nb_trajets", f"{season}/parc_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha", decimals=1)
 
     analyser_relation(hexagones, "nombre_uni", "nb_trajets", f"{season}/nb_universite_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
 
     analyser_relation(hexagones, "walk_sc_mo", "nb_trajets", f"{season}/walkscore_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=1)
 
     analyser_relation(hexagones, "tran_sc_mo", "nb_trajets", f"{season}/transitscore_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=1)
 
     analyser_relation(hexagones, "bike_sc_mo", "nb_trajets", f"{season}/bikescore_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=1)
 
     analyser_relation(hexagones, "l_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
     analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
     analyser_relation(hexagones, "p4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
     analyser_relation(hexagones, "np4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_non_protege_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
     analyser_relation(hexagones, "densite_es", "nb_trajets", f"{season}/densite_population_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha/km²")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha/km²", decimals=0)
 
     analyser_relation(hexagones, "distance_c", "nb_trajets", f"{season}/distance_centre-ville_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="km")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="km", decimals=1)
 
     analyser_relation(hexagones, "densite_lo", "nb_trajets", f"{season}/densite_logements_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="log/ha")
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="log/ha", decimals=0)
 
     analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv")
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
 
     analyser_zonage(hexagones, output_path=f"../../output/{season}/zonage.png")
 
