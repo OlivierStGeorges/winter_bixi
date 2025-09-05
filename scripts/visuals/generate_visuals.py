@@ -261,7 +261,7 @@ def main():
 
     analyser_relation(hexagones, "l_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0,
-        manual_bins = [0, 100, 200, 500, 1000, 1500, np.inf]
+        manual_bins = [0, 200, 500, 1000, 1500, np.inf]
         )
     analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
