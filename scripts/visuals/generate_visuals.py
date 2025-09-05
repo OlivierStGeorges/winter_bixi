@@ -7,17 +7,35 @@ import os
 import numpy as np
 from scipy.stats import spearmanr
 import mapclassify
+# Dictionnaire pour labels des axes X
+LABELS_X = {
+    "aire_parc": "Superficie des parcs (ha)",
+    "nombre_uni": "Nombre d'universités",
+    "walk_sc_mo": "Walk Score",
+    "tran_sc_mo": "Transit Score",
+    "bike_sc_mo": "Bike Score",
+    "l_m": "Longueur pistes cyclables (m)",
+    "l4s_m": "Longueur pistes cyclables 4 saisons (m)",
+    "p4s_m": "Longueur pistes cyclables 4 saisons protégées (m)",
+    "np4s_m": "Longueur pistes cyclables 4 saisons non protégées (m)",
+    "densite_es": "Densité de population (hab/ha)",
+    "distance_c": "Distance au centre-ville (km)",
+    "densite_lo": "Densité de logements (log/ha)",
+    "nb_cegep": "Nombre de cégeps"
+}
 
 def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../output/correlations.csv", x_unit="",
-                      decimals=2):
+                      decimals=2, manual_bins=None):
     data = df[[x_col, y_col]].copy()
     data = data.replace([-1], pd.NA).dropna()
 
+
+    # Corrélations
     r_sp, p_sp = spearmanr(data[x_col], data[y_col])
     r, p_value = pearsonr(data[x_col], data[y_col])
     print(f"{output_prefix} - R: {r:.3f}, p-value: {p_value:.3e}")
 
-    # Export corrélation dans CSV (append ou création)
+    # Export CSV
     corr_df = pd.DataFrame([{
         "x_variable": x_col,
         "y_variable": y_col,
@@ -46,23 +64,20 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
     plt.savefig(f"../../output/{output_prefix}_scatter.png", dpi=300)
     plt.close()
 
-    # Classer avec Jenks
+    # Jenks
     classifier = mapclassify.NaturalBreaks(data[x_col], k=5)
-    bins = [-float("inf")] + list(classifier.bins)  # inclure min
+    bins = [-float("inf")] + list(classifier.bins)
     data["bin_jenks"] = pd.cut(data[x_col], bins=bins, include_lowest=True)
 
-    # Grouper : taille et moyenne
     grouped = data.groupby("bin_jenks").agg(
         n_obs=(x_col, "count"),
         mean_trajets=(y_col, "mean")
     ).reset_index()
 
-    # Formatter les labels des intervalles Jenks
     grouped["bin_label"] = grouped["bin_jenks"].apply(
         lambda x: f"[{x.left:.{decimals}f}, {x.right:.{decimals}f}]"
     )
 
-    # --- Graph ---
     fig, ax1 = plt.subplots(figsize=(8, 5))
     ax1.bar(grouped["bin_label"], grouped["n_obs"], color="skyblue", alpha=0.7, label="Nombre d'observations")
     ax1.set_ylabel("Nombre d'observations", color="skyblue")
@@ -73,13 +88,11 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
     ax2.plot(grouped["bin_label"], grouped["mean_trajets"], color="darkred", marker="o", label="Nb trajets moyen")
     ax2.set_ylabel("Nombre moyen de trajets", color="darkred")
     ax2.tick_params(axis="y", labelcolor="darkred")
-
-#    plt.title("Observations et trajets moyens par bin (Jenks)")
     fig.tight_layout()
     plt.savefig(f"../../output/{output_prefix}_jenks.png", dpi=300)
     plt.close()
 
-    # Barplot par quantiles
+    # Quantiles
     data["quantile"] = pd.qcut(data[x_col], q=5, duplicates="drop")
     grouped = data.groupby("quantile")[y_col].mean().reset_index()
 
@@ -93,7 +106,7 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
     plt.savefig(f"../../output/{output_prefix}_barplot.png", dpi=300)
     plt.close()
 
-    # Histogramme de x_col
+    # Histogramme
     plt.figure(figsize=(8, 5))
     sns.histplot(data[x_col], kde=True, color="skyblue", edgecolor="k")
     plt.title(f"Distribution de {x_col}")
@@ -103,6 +116,54 @@ def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../ou
     plt.tight_layout()
     plt.savefig(f"../../output/{output_prefix}_hist_{x_col}.png", dpi=300)
     plt.close()
+
+    # --- Nouveau : Barplot avec bins manuelles ---
+    # --- Nouveau : Barplot avec bins manuelles ---
+    # --- Nouveau : Graph avec bins manuelles ---
+    if manual_bins is not None:
+        try:
+            # Appliquer les bins manuelles
+            data["manual_bin"] = pd.cut(data[x_col], bins=manual_bins, include_lowest=True)
+
+            # Grouper : taille et moyenne
+            grouped = data.groupby("manual_bin").agg(
+                n_obs=(x_col, "count"),
+                mean_trajets=(y_col, "mean")
+            ).reset_index()
+
+            # Labels jolis pour l’axe X
+            grouped["bin_label"] = grouped["manual_bin"].apply(
+                lambda x: f"[{x.left:.{decimals}f}, {x.right:.{decimals}f}]"
+            )
+
+            # --- Graph ---
+            fig, ax1 = plt.subplots(figsize=(8, 5))
+            ax1.bar(grouped["bin_label"], grouped["n_obs"],
+                    color="skyblue", alpha=0.7, label="Nombre d'observations")
+            ax1.set_ylabel("Nombre d'observations", color="skyblue")
+            ax1.tick_params(axis="y", labelcolor="skyblue")
+            # Récupérer un label lisible pour l'axe X
+            xlabel_text = LABELS_X.get(x_col, x_col)
+           # if x_unit:  # si unité définie dans l'appel → on l’ajoute
+            #    xlabel_text = f"{xlabel_text} ({x_unit})"
+
+            ax1.set_xlabel(xlabel_text)
+
+            ax2 = ax1.twinx()
+            ax2.plot(grouped["bin_label"], grouped["mean_trajets"],
+                     color="darkred", marker="o", label="Nb trajets moyen")
+            ax2.set_ylabel("Nombre moyen de trajets", color="darkred")
+            ax2.tick_params(axis="y", labelcolor="darkred")
+
+            fig.tight_layout()
+            plt.savefig(f"../../output/{output_prefix}_manualbins.png", dpi=300)
+            plt.close()
+
+        except Exception as e:
+            print(f"⚠️ Erreur lors du tracé avec bins manuelles pour {x_col}: {e}")
+
+
+
 
 
 def generer_matrice_correlation(df, colonnes, output_path="../../output/correlation_matrix.png"):
@@ -177,23 +238,31 @@ def main():
     season = season + "/250m"
     # Lancer l'analyse sur différentes variables
     analyser_relation(hexagones, "aire_parc", "nb_trajets", f"{season}/parc_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha", decimals=1)
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha", decimals=0,
+                      manual_bins=[0, 1,3, 5, 7,11, np.inf])
 
     analyser_relation(hexagones, "nombre_uni", "nb_trajets", f"{season}/nb_universite_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
 
     analyser_relation(hexagones, "walk_sc_mo", "nb_trajets", f"{season}/walkscore_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=1)
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0,
+        manual_bins=[0, 60, 70, 80, 90, 100]
+                      )
 
     analyser_relation(hexagones, "tran_sc_mo", "nb_trajets", f"{season}/transitscore_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=1)
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0,
+        manual_bins=[0, 60, 70, 80, 90, 100]
+                      )
 
     analyser_relation(hexagones, "bike_sc_mo", "nb_trajets", f"{season}/bikescore_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=1)
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0,
+        manual_bins=[0, 60, 70, 80, 90, 100]
+                      )
 
     analyser_relation(hexagones, "l_m", "nb_trajets", f"{season}/longueur_piste_cyclable_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
-
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0,
+        manual_bins = [0, 100, 200, 500, 1000, 1500, np.inf]
+        )
     analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
@@ -204,13 +273,19 @@ def main():
                       correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
     analyser_relation(hexagones, "densite_es", "nb_trajets", f"{season}/densite_population_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha/km²", decimals=0)
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha/km²", decimals=0,
+        manual_bins=[0, 5000, 9000, 12500, 20000, np.inf]
+                      )
 
     analyser_relation(hexagones, "distance_c", "nb_trajets", f"{season}/distance_centre-ville_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="km", decimals=1)
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="km", decimals=0,
+        manual_bins=[ 0, 2, 4,6,8, 10, 18]
+                      )
 
     analyser_relation(hexagones, "densite_lo", "nb_trajets", f"{season}/densite_logements_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="log/ha", decimals=0)
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="log/ha", decimals=0,
+        manual_bins=[ 0, 25, 50, 75, 100, np.inf]
+                      )
 
     analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
