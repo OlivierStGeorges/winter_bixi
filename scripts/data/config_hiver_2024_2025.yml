@@ -32,7 +32,7 @@ paths:
 
   hexagone: "../../data/hexagone/Tessellation_hexagones_250m.shp"
   aire_diffusion: "../../data/raw/donnees_densite/aire_diffusion_mtl_densite.shp"
-  reseau_cyclable: "../../data/raw/piste_cyclable/reseau_cyclable_protege.shp"
+  reseau_cyclable: "../../data/raw/piste_cyclable/reseau_cyclable.shp"
   parcs: "../../data/raw/export(1)/export(1)-POLYGON.shp"
   universites: "../../data/raw/etablissements-meq-mes-esrishp/ES_Universitaire.shp"
   affectation: "../../data/raw/affectationpu.zip"
