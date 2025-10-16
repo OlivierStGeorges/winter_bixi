@@ -227,7 +227,7 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "hiver_2425"
+    season = "ete_2024"
     if season == "ete_2024":
         hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2324":
@@ -265,7 +265,8 @@ def main():
         manual_bins = [0, 200, 500, 1000, 1500, np.inf]
         )
     analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
+                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0,
+                      manual_bins=[0, 200, 500, 1000, 1500, np.inf])
 
     #analyser_relation(hexagones, "p4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
     #                  correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
