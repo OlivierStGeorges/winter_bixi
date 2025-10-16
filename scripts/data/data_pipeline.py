@@ -10,11 +10,12 @@ from compute_distance_to_downtown import compute_distance_to_downtown
 from add_zoning_data import lister_affectations_par_hexagone
 from generate_housing_density_data import calculer_densite_logement_par_hexagone
 from add_college_data import ajouter_nombre_cegep_par_hexagone
+from add_up_uni_cegep import add_uni_cegep
 from clip_montreal import clip_mtl
 from create_index import create_index
 import yaml
 
-def load_config(path="config_hiver_2024_2025.yml"):
+def load_config(path="config_ete_2024.yml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
 
@@ -117,6 +118,10 @@ def main():
         ajouter_nombre_cegep_par_hexagone(
             path_hexagones=paths["hex_logement"],
             path_cegep=paths["cegep"],
+            output_path=paths["hex_cegep"]
+        )
+        add_uni_cegep(
+            path_hexagones=paths["hex_cegep"],
             output_path=paths["hex_cegep"]
         )
 

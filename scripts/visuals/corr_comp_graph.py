@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.patches as mpatches
+from scipy.stats import spearmanr
 
 # Dictionnaire x_variable → description
 dict_nom = {
@@ -15,7 +16,7 @@ dict_nom = {
     "p4s_m": "Couverture de pistes cyclables\n(protégées - 4 saisons)",
     "np4s_m": "Couverture de pistes cyclables\n(non protégées - 4 saisons)",
     "densite_es": "Densité de population",
-    "distance_c": "Distance au centre-ville",
+    "distance_c": "Proximité au centre-ville",
     "densite_lo": "Densité de logements",
     "nb_cegep": "Nombre de cégeps"
 }
@@ -41,6 +42,9 @@ def plot_correlation(R_col, p_col, output_file="correlations.png"):
     """
     # Charger les CSV
     dfs = [pd.read_csv(f) for f in files]
+    for df in dfs:
+        print( df[df['x_variable'] == 'distance_c']['spearman_r'].values[0])
+        df.loc[df['x_variable'] == 'distance_c', 'spearman_r'] = (-df.loc[df['x_variable'] == 'distance_c', 'spearman_r'].values[0])
 
     # Labels
     labels = [dict_nom[x] for x in dfs[0]["x_variable"]]

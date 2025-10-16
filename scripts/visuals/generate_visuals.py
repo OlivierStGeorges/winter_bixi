@@ -9,7 +9,7 @@ from scipy.stats import spearmanr
 import mapclassify
 # Dictionnaire pour labels des axes X
 LABELS_X = {
-    "aire_parc": "Superficie des parcs (ha)",
+    "aire_parc": "Présence de parcs (ha)",
     "nombre_uni": "Nombre d'universités",
     "walk_sc_mo": "Walk Score",
     "tran_sc_mo": "Transit Score",
@@ -21,7 +21,8 @@ LABELS_X = {
     "densite_es": "Densité de population (hab/ha)",
     "distance_c": "Distance au centre-ville (km)",
     "densite_lo": "Densité de logements (log/ha)",
-    "nb_cegep": "Nombre de cégeps"
+    "nb_cegep": "Nombre de cégeps",
+    "nb_ec_supp": "Présence d'établissements postsecondaires"
 }
 
 def analyser_relation(df, x_col, y_col, output_prefix, correlation_csv="../../output/correlations.csv", x_unit="",
@@ -226,7 +227,7 @@ def analyser_zonage(hexagones, output_path ):
 
 def main():
     # Chargement des données
-    season = "ete_2024"
+    season = "hiver_2425"
     if season == "ete_2024":
         hexagones = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
     elif season == "hiver_2324":
@@ -290,11 +291,14 @@ def main():
     analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
 
+    analyser_relation(hexagones, "nb_ec_supp", "nb_trajets", f"{season}/nb_ec_supp_vs_trajets",
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
+
     analyser_zonage(hexagones, output_path=f"../../output/{season}/zonage.png")
 
     colonnes_facteurs = [
         "aire_parc", "nombre_uni", "walk_sc_mo", "tran_sc_mo", "bike_sc_mo", "l_m", "l4s_m", "p4s_m", "np4s_m",
-        "densite_es", "distance_c", "densite_lo", "nb_cegep"
+        "densite_es", "distance_c", "densite_lo", "nb_cegep", "nb_ec_supp"
     ]
 
     generer_matrice_correlation(hexagones, colonnes_facteurs,

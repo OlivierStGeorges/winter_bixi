@@ -9,18 +9,18 @@ from sklearn.model_selection import train_test_split
 # Variables
 # -------------------
 colonnes_facteurs = [
-    "aire_parc", "nombre_uni", "walkscore_", "transitsco",
-    "bikescore_", #"longueur_m",
+    "aire_parc", "nombre_uni", "walk_sc_mo", "tran_sc_mo",
+    "bike_sc_mo", "l_m",
      "densite_es", "distance_c",
-    "densite_lo", #"nb_cegep"
+    "densite_lo", "nb_cegep"
 ]
 
 # Exemple : chargement des données
 
 # Exemple : chargement des données
-#df = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement.shp")
+#df = gpd.read_file("../../data/processed/ete_2024/hexagones250m_ete_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
 #df = gpd.read_file("../../data/processed/hiver_2324/hexagones250m_hiver_2023_2024_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
-#df = gpd.read_file("../../data/processed/hiver2425/hexagones250m_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement.shp")
+df = gpd.read_file( "../../data/processed/hiver2425/hexagones250m_hiver_2024_2025_popdens_bikepath_parcs_universites_zonage_logement_cegep.shp")
 
 # -------------------
 # Séparation features / target
@@ -71,7 +71,7 @@ explainer = shap.TreeExplainer(model)
 shap_values = explainer.shap_values(X_valid)
 
 # Dependence plot pour la variable "transitsco"
-shap.dependence_plot("transitsco", shap_values, X_valid)
+shap.dependence_plot("aire_parc", shap_values, X_valid)
 
 import numpy as np
 
@@ -79,8 +79,8 @@ import numpy as np
 n_bins = 10
 
 # On récupère les valeurs de la variable et de SHAP
-x_vals = X_valid["transitsco"].values
-shap_vals = shap_values[:, X_valid.columns.get_loc("transitsco")]
+x_vals = X_valid["aire_parc"].values
+shap_vals = shap_values[:, X_valid.columns.get_loc("aire_parc")]
 
 # Découpage en quantiles pour répartir les buckets
 bins = pd.qcut(x_vals, q=n_bins, duplicates="drop")
@@ -98,8 +98,8 @@ bucket_means = pd.DataFrame({
 # Plot
 plt.figure(figsize=(7, 4))
 plt.plot(bucket_means["x_val"], bucket_means["shap_val"], marker="o")
-plt.title("SHAP dependence (bucketisé) - transitsco")
-plt.xlabel("Valeur moyenne de transitsco (par bucket)")
+plt.title("SHAP dependence - transitscore")
+plt.xlabel("Valeur moyenne de transitsco (par intervalle)")
 plt.ylabel("Valeur SHAP moyenne")
 plt.grid(True)
 plt.tight_layout()
