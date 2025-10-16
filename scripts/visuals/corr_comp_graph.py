@@ -6,18 +6,18 @@ from scipy.stats import spearmanr
 
 # Dictionnaire x_variable → description
 dict_nom = {
-    "aire_parc": "Présence de parcs (ha)",
+    "aire_parc": "Présence de parcs",
     #"nombre_uni": "Nombre d'universités",
     "walk_sc_mo": "Walk Score",
     "tran_sc_mo": "Transit Score",
     "bike_sc_mo": "Bike Score",
-    "l_m": "Longueur pistes cyclables (m)",
-    "l4s_m": "Longueur pistes cyclables 4 saisons (m)",
+    "l_m": "Longueur pistes cyclables",
+    "l4s_m": "Longueur pistes cyclables 4 saisons",
     #"p4s_m": "Longueur pistes cyclables 4 saisons protégées (m)",
     #"np4s_m": "Longueur pistes cyclables 4 saisons non protégées (m)",
-    "densite_es": "Densité de population (hab/ha)",
-    "distance_c": "Distance au centre-ville (km)",
-    "densite_lo": "Densité de logements (log/ha)",
+    "densite_es": "Densité de population",
+    "distance_c": "Distance au centre-ville",
+    "densite_lo": "Densité de logements",
    # "nb_cegep": "Nombre de cégeps",
     "nb_ec_supp": "Présence d'établissements postsecondaires"
 }
@@ -43,9 +43,9 @@ def plot_correlation(R_col, p_col, output_file="correlations.png"):
     """
     # Charger les CSV
     dfs = [pd.read_csv(f) for f in files]
-    for df in dfs:
-        print( df[df['x_variable'] == 'distance_c']['spearman_r'].values[0])
-        df.loc[df['x_variable'] == 'distance_c', 'spearman_r'] = (-df.loc[df['x_variable'] == 'distance_c', 'spearman_r'].values[0])
+#    for df in dfs:
+#        print( df[df['x_variable'] == 'distance_c']['spearman_r'].values[0])
+ #       df.loc[df['x_variable'] == 'distance_c', 'spearman_r'] = (-df.loc[df['x_variable'] == 'distance_c', 'spearman_r'].values[0])
 
     # Labels
     labels = [dict_nom[x] for x in dfs[0]["x_variable"]]
