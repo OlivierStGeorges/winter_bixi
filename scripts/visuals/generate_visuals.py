@@ -242,8 +242,8 @@ def main():
                       correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha", decimals=0,
                       manual_bins=[0, 1,3, 5, 7,11, np.inf])
 
-    analyser_relation(hexagones, "nombre_uni", "nb_trajets", f"{season}/nb_universite_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
+    #analyser_relation(hexagones, "nombre_uni", "nb_trajets", f"{season}/nb_universite_vs_trajets",
+    #                  correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
 
     analyser_relation(hexagones, "walk_sc_mo", "nb_trajets", f"{season}/walkscore_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", decimals=0,
@@ -267,11 +267,11 @@ def main():
     analyser_relation(hexagones, "l4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
-    analyser_relation(hexagones, "p4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
+    #analyser_relation(hexagones, "p4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_protege_vs_trajets",
+    #                  correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
-    analyser_relation(hexagones, "np4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_non_protege_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
+    #analyser_relation(hexagones, "np4s_m", "nb_trajets", f"{season}/longueur_piste_cyclable_4saisons_non_protege_vs_trajets",
+    #                  correlation_csv=f"../../output/{season}/correlations.csv", x_unit="m", decimals=0)
 
     analyser_relation(hexagones, "densite_es", "nb_trajets", f"{season}/densite_population_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", x_unit="ha/km²", decimals=0,
@@ -288,8 +288,8 @@ def main():
         manual_bins=[ 0, 25, 50, 75, 100, np.inf]
                       )
 
-    analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
+    #analyser_relation(hexagones, "nb_cegep", "nb_trajets", f"{season}/nb_cegep_vs_trajets",
+    #                  correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
 
     analyser_relation(hexagones, "nb_ec_supp", "nb_trajets", f"{season}/nb_ec_supp_vs_trajets",
                       correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
@@ -297,7 +297,7 @@ def main():
     analyser_zonage(hexagones, output_path=f"../../output/{season}/zonage.png")
 
     colonnes_facteurs = [
-        "aire_parc", "nombre_uni", "walk_sc_mo", "tran_sc_mo", "bike_sc_mo", "l_m", "l4s_m", "p4s_m", "np4s_m",
+        "aire_parc", "nombre_uni", "walk_sc_mo", "tran_sc_mo", "bike_sc_mo", "l_m", "l4s_m", #"p4s_m", "np4s_m",
         "densite_es", "distance_c", "densite_lo", "nb_cegep", "nb_ec_supp"
     ]
 
