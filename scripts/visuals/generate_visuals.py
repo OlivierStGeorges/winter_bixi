@@ -292,7 +292,8 @@ def main():
     #                  correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
 
     analyser_relation(hexagones, "nb_ec_supp", "nb_trajets", f"{season}/nb_ec_supp_vs_trajets",
-                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0)
+                      correlation_csv=f"../../output/{season}/correlations.csv", decimals=0,
+                      manual_bins=[0, 1, 2, 3,4, 5, 6])
 
     analyser_zonage(hexagones, output_path=f"../../output/{season}/zonage.png")
 
