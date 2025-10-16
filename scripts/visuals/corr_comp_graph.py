@@ -6,19 +6,20 @@ from scipy.stats import spearmanr
 
 # Dictionnaire x_variable → description
 dict_nom = {
-    "aire_parc": "Superficie des parcs",
-    "nombre_uni": "Nombre d’universités",
-    "walk_sc_mo": "Walkscore",
-    "tran_sc_mo": "Transitscore",
-    "bike_sc_mo": "Bikescore",
-    "l_m": "Couverture de pistes cyclables\n(toutes)",
-    "l4s_m": "Couverture de pistes cyclables\n(4 saisons)",
-    "p4s_m": "Couverture de pistes cyclables\n(protégées - 4 saisons)",
-    "np4s_m": "Couverture de pistes cyclables\n(non protégées - 4 saisons)",
-    "densite_es": "Densité de population",
-    "distance_c": "Proximité au centre-ville",
-    "densite_lo": "Densité de logements",
-    "nb_cegep": "Nombre de cégeps"
+    "aire_parc": "Présence de parcs (ha)",
+    #"nombre_uni": "Nombre d'universités",
+    "walk_sc_mo": "Walk Score",
+    "tran_sc_mo": "Transit Score",
+    "bike_sc_mo": "Bike Score",
+    "l_m": "Longueur pistes cyclables (m)",
+    "l4s_m": "Longueur pistes cyclables 4 saisons (m)",
+    #"p4s_m": "Longueur pistes cyclables 4 saisons protégées (m)",
+    #"np4s_m": "Longueur pistes cyclables 4 saisons non protégées (m)",
+    "densite_es": "Densité de population (hab/ha)",
+    "distance_c": "Distance au centre-ville (km)",
+    "densite_lo": "Densité de logements (log/ha)",
+   # "nb_cegep": "Nombre de cégeps",
+    "nb_ec_supp": "Présence d'établissements postsecondaires"
 }
 
 # Couleurs et paramètres
